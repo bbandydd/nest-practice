@@ -1,7 +1,21 @@
-import { Module } from '@nestjs/common';
+import { Module, RequestMethod } from '@nestjs/common';
+import { UsersController } from './Users/users.controller';
+import { ProductsController } from './Products/products.controller';
 import { UsersModule } from './Users/users.module';
+import { LoggerMiddleware } from './Shared/middlewares/logger.middleware';
+import { SimpleMiddleware } from './Shared/middlewares/simple.middleware';
+import { NestModule, MiddlewaresConsumer } from '@nestjs/common/interfaces';
 
 @Module({
   modules: [UsersModule],
 })
-export class ApplicationModule {}
+export class ApplicationModule implements NestModule {
+  configure(consumer: MiddlewaresConsumer): void {
+    consumer.apply([LoggerMiddleware, SimpleMiddleware])
+      .with('來自根模組的參數')
+      .forRoutes(
+        UsersController,
+        ProductsController,
+      )
+  }
+}
