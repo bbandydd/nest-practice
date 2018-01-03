@@ -19,7 +19,7 @@ export class ProductsController {
     async getProduct(@Response() res, @Param('id') id) {
         await this.productsSercice.getProduct(+id)
             .then(product => res.status(HttpStatus.OK).json(product))
-            .catch(err => rea.status(HttpStatus.INTERNAL_SERVER_ERROR));
+            .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Post()

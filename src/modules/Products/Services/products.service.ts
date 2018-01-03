@@ -2,9 +2,9 @@ import { Component } from '@nestjs/common';
 import { HttpException } from '@nestjs/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import { CreateProductsDTO, CreateProductDTO } from '../DTO/create-products.dto';
+import { CreateProductDTO } from '../DTO/create-products.dto';
 
-@Component
+@Component()
 export class ProductsService {
     private products = [
         { _id: 1, _name: 'Watch', _price: 1000 },
