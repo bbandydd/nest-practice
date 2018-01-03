@@ -10,7 +10,7 @@ import { NestModule, MiddlewaresConsumer } from '@nestjs/common/interfaces';
 @Module({
   modules: [UsersModule],
 })
-@UseFilters(new HttpExceptionFilter())
+// @UseFilters(new HttpExceptionFilter())
 export class ApplicationModule implements NestModule {
   configure(consumer: MiddlewaresConsumer): void {
     consumer.apply([LoggerMiddleware, SimpleMiddleware])

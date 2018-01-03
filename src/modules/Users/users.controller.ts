@@ -5,9 +5,11 @@ import { UsersService } from './Services/users.service';
 import { ProductsService } from '../Products/Services/products.service';
 import { CustomForbiddenException } from '../Shared/ExceptionFilters/forbidden.exception';
 import { HttpExceptionFilter } from '../Shared/ExceptionFilters/http-exception.filter';
+import { ValidationPipe } from '../Shared/Pipes/validation.pipe';
+import { ParseIntPipe } from '../Shared/Pipes/parse-int.pipe';
 
 @Controller('users')
-@UseFilters(new HttpExceptionFilter())
+// @UseFilters(new HttpExceptionFilter())
 export class UsersController {
     constructor(
         private userService: UsersService,
@@ -22,14 +24,14 @@ export class UsersController {
     }
 
     @Get('/:id')
-    async getUser(@Response() res, @Param('id') id) {
-        await this.userService.getUser(+id)
+    async getUser(@Response() res, @Param('id', new ParseIntPipe()) id) {
+        await this.userService.getUser(id)
             .then(user => res.status(HttpStatus.OK).json(user))
             .catch(error => res.status(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Post()
-    async addUser(@Response() res, @Body() createUserDTO: CreateUserDTO) {
+    async addUser(@Response() res, @Body(new ValidationPipe()) createUserDTO: CreateUserDTO) {
         await this.userService.addUser(createUserDTO)
             .subscribe(users => res.status(HttpStatus.OK).json(users));
     }
