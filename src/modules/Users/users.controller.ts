@@ -11,25 +11,15 @@ export class UsersController {
     @Get()
     async getAllUsers(@Request() req, @Response() res, @Next() next) {
         await this.userService.getAllUsers()
-            .then((users) => {
-                res.status(HttpStatus.OK).json(users);
-            })
-            .catch((error) => {
-                console.log(error);
-                res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-            })
+            .then(users => res.status(HttpStatus.OK).json(users))
+            .catch(error => res.status(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Get('/:id')
     async getUser(@Response() res, @Param('id') id) {
         await this.userService.getUser(+id)
-            .then((user) => {
-                res.status(HttpStatus.OK).json(user);
-            })
-            .catch((error) => {
-                console.log(error);
-                res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-            })
+            .then(user => res.status(HttpStatus.OK).json(user))
+            .catch(error => res.status(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Post()
