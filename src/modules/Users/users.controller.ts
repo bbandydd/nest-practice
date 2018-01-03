@@ -1,9 +1,13 @@
-import { Controller, Get, Post, Request, Response, Param, Next, HttpStatus, Body } from '@nestjs/common';
+import { Controller, Get, Post, Request, Response, Param, Next, HttpStatus, Body, UseFilters } from '@nestjs/common';
+import { HttpException } from '@nestjs/core/exceptions/http-exception';
 import { CreateUserDTO } from './DTO/create-users.dto';
 import { UsersService } from './Services/users.service';
 import { ProductsService } from '../Products/Services/products.service';
+import { CustomForbiddenException } from '../Shared/ExceptionFilters/forbidden.exception';
+import { HttpExceptionFilter } from '../Shared/ExceptionFilters/http-exception.filter';
 
 @Controller('users')
+@UseFilters(new HttpExceptionFilter())
 export class UsersController {
     constructor(
         private userService: UsersService,
@@ -35,5 +39,11 @@ export class UsersController {
         await this.productsService.getAllProducts()
             .then(products => res.status(HttpStatus.OK).json(products))
             .catch(error => res.status(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    @Get('/exception/get')
+    @UseFilters(new HttpExceptionFilter())
+    async getException(@Request() req, @Response() res, @Next() next) {
+        throw new CustomForbiddenException();
     }
 }
