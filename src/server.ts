@@ -2,8 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { INestApplication } from '@nestjs/common/interfaces/nest-application.interface';
 import { ApplicationModule } from './modules/app.module';
 import * as express from 'express';
+import * as path from 'path';
 
 const instance = express();
+
+instance.set('views', path.join(__dirname, 'views'));
+instance.set('view engine', 'ejs');
 
 const app: Promise<INestApplication> = NestFactory.create(ApplicationModule, instance);
 
