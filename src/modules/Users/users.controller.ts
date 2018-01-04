@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Request, Response, Param, Next, HttpStatus, Body, UseFilters, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Request, Response, Param, Next, HttpStatus, Body, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { HttpException } from '@nestjs/core/exceptions/http-exception';
 import { CreateUserDTO } from './DTO/create-users.dto';
 import { UsersService } from './Services/users.service';
@@ -9,9 +9,12 @@ import { ValidationPipe } from '../Shared/Pipes/validation.pipe';
 import { ParseIntPipe } from '../Shared/Pipes/parse-int.pipe';
 import { RolesGuard } from '../Shared/Guards/roles.guard';
 import { Roles } from '../Shared/Decorators/roles.decarator';
+import { LoggingInterceptor } from '../Shared/Interceptors/logging.interceptor';
+import { TransformInterceptor } from '../Shared/Interceptors/transform.interceptor';
+import { ExceptionInterceptor } from '../Shared/Interceptors/exception.interceptor';
 
 @Controller('users')
-@UseGuards(RolesGuard)
+// @UseGuards(RolesGuard)
 // @UseFilters(new HttpExceptionFilter())
 export class UsersController {
     constructor(
@@ -52,5 +55,12 @@ export class UsersController {
     @UseFilters(new HttpExceptionFilter())
     async getException(@Request() req, @Response() res, @Next() next) {
         throw new CustomForbiddenException();
+    }
+
+    @Get('/interceptor/test')
+    @UseInterceptors(ExceptionInterceptor)
+    @UseFilters(new HttpExceptionFilter())
+    async testInterceptor() {
+        throw new Error('test ExceptionInterceptor');
     }
 }
